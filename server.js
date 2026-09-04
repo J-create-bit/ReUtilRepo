@@ -8,7 +8,8 @@ const fs = require("fs");
 
 dotenv.config();
 const app=express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
@@ -75,7 +76,7 @@ app.post("/is", async (req, res) => {
   res.redirect("/private");
 });
 
-
+/*
 app.get("/private", async (req, res) => {
   const token = req.cookies.access_token;
   if (!token) return res.redirect("/");
@@ -95,6 +96,8 @@ app.get("/private", async (req, res) => {
     res.send(modifiedHtml);
   });
 });
+
+*/
 
 app.get("/logout", (req, res) => {
   res.clearCookie("access_token");
