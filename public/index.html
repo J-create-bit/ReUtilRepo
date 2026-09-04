@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReÚtil</title>
+
+    <style>
+        .toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 32px;
+        }
+
+        .toggle input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle label {
+            position: relative;
+            display: block;
+            width: 74px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        .toggle label::before {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 0;
+
+            width: 74px;
+            height: 20px;
+
+            background: #bbb;
+            border-radius: 20px;
+
+            transition: 0.2s ease;
+        }
+
+        .toggle label::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 32px;
+            height: 32px;
+
+            background: #5b5656;
+            border-radius: 50%;
+
+            box-shadow:
+                0 2px 2px #343131,
+                0 2px 5px rgba(0, 0, 0, 0.3);
+
+            transition: 0.2s ease;
+        }
+
+        .toggle input:checked + label::before {
+            background: #77C2BB;
+        }
+
+        .toggle input:checked + label::after {
+            background: #21bf73;
+            left: 42px;
+        }
+
+        #loginForm,
+        #registerForm {
+            display: none;
+        }
+
+        #loginForm.active,
+        #registerForm.active {
+            display: block;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        form input {
+            display: block;
+            padding: 5px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="toggle">
+            <span>Inicia sesión</span>
+            <input type="checkbox" id="toggleAuth">
+            <label for="toggleAuth"></label>
+            <span>Registro</span>
+        </div>
+
+        <form id="loginForm" action="/is" method="POST" class="active">
+
+            <label for="loginEmail">Email *</label>
+            <input type="email" id="loginEmail" name="email" required placeholder="mail@mail.com">
+
+            <label for="loginPassword">Contraseña *</label>
+            <input type="password" id="loginPassword" name="password" required placeholder="******">
+
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+
+        <form id="registerForm" action="/registro" method="POST">
+
+            <label for="nombre">Nombre *</label>
+            <input type="nombre" id="nombre" name="nombre" required placeholder="Pepe">
+
+            <label for="registerEmail">Email *</label>
+            <input type="email" id="registerEmail" name="email" required placeholder="mail@mail.com">
+
+            <label for="registerPassword">Contraseña *</label>
+            <input type="password" id="password" name="password" required placeholder="******">
+
+            <label for="telefono">WhatsApp/Teléfono *</label>
+            <input type="tel" id="telefono" name="telefono" required placeholder="+598 99 123 456">
+
+            <label for="zona">Zona/Barrio *</label>
+            <input type="text" id="direccion" name="direccion" required placeholder="Ej: Nueva Savona">
+
+            <button type="submit">
+                Registrarse
+            </button>
+        </form>
+    </div>
+    <script>
+        const toggleAuth = document.getElementById("toggleAuth");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+
+        toggleAuth.addEventListener("change", function () {
+            if (this.checked) {
+                loginForm.classList.remove("active");
+                registerForm.classList.add("active");
+            } else {
+                registerForm.classList.remove("active");
+                loginForm.classList.add("active");
+            }
+        });
+    </script>
+</body>
+</html>
