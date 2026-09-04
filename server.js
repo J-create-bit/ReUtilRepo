@@ -7,66 +7,31 @@ const path = require("path");
 const fs = require("fs");
 
 dotenv.config();
-const app=express();
-const PORT = process.env.PORT || 3000;
-
+const app = express();
+const PORT = 3000;
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static("public"));
+app.use(express.static("public")); 
+
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post("/registro", async (req, res) => {
 
-    const { nombre, email, password, telefono, direccion } = req.body;
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+  const { user, error } = await supabase.auth.signUp({ email, password });
 
-    const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password
-    });
-
-    if (error) {
-        console.error("Error al registrar usuario:", error.message);
-
-        return res.redirect(
-            `/error.html?msg=${encodeURIComponent(error.message)}`
-        );
-    }
-
-    const user = data.user;
-    if (!user) {
-        return res.redirect(
-            `/error.html?msg=${encodeURIComponent("No se pudo crear el usuario")}`
-        );
-    }
-
-    const { error: insertError } = await supabase
-        .from("usuario")
-        .insert([
-            {
-                id: user.id,
-                nombre,
-                email,
-                telefono,
-                direccion
-            }
-        ]);
-
-    if (insertError) {
-        console.error("Error al guardar los datos:", insertError.message);
-        return res.redirect(
-            `/error.html?msg=${encodeURIComponent(insertError.message)}`
-        );
-    }
-    res.redirect("/confirmacion.html");
+  if (error) return res.redirect(`/error.html?msg=${encodeURIComponent(error.message)}`);
+  res.redirect("/signup_success.html");
 });
 
-app.post("/is", async (req, res) => {
+
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -76,7 +41,7 @@ app.post("/is", async (req, res) => {
   res.redirect("/private");
 });
 
-/*
+
 app.get("/private", async (req, res) => {
   const token = req.cookies.access_token;
   if (!token) return res.redirect("/");
@@ -92,12 +57,11 @@ app.get("/private", async (req, res) => {
         return res.status(500).send("Server error: private.html not found.");
       }
     
+
     const modifiedHtml = html.replace("{{userEmail}}", data.user.email);
     res.send(modifiedHtml);
   });
 });
-
-*/
 
 app.get("/logout", (req, res) => {
   res.clearCookie("access_token");
