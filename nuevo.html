@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publicar - ReÚtil</title>
+<link rel="icon" type="image/x-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .hero-publicar {
+    margin: 24px 32px 0;
+    border: 2px solid var(--gris-linea);
+    border-radius: 4px;
+    display: flex;
+    min-height: 150px;
+  }
+  .hero-publicar .panel-texto {
+    flex: 1;
+    background: var(--teal-claro);
+    display: flex; align-items: center;
+    padding: 0 40px;
+  }
+  .hero-publicar .panel-texto p {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 38px;
+    margin: 0;
+  }
+  .hero-publicar .panel-plus {
+    width: 160px;
+    background: var(--verde-oscuro);
+    border-left: 2px solid var(--gris-linea);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-publicar .panel-plus svg { width: 56px; height: 56px; stroke: white !important; }
+
+  main.form-wrap {
+    max-width: 1040px;
+    margin: 48px auto 80px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 40px;
+  }
+  .foto-drop {
+    border: 2px solid var(--gris-linea);
+    border-radius: 4px;
+    aspect-ratio: 1 / 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px;
+    color: #444;
+    cursor: pointer;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+  }
+  .foto-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .foto-drop svg { width: 60px; height: 60px; }
+  .foto-drop .texto-principal { font-size: 20px; }
+  .foto-drop .texto-secundario { font-style: italic; font-size: 14px; color: #777; }
+  .foto-drop.con-foto .placeholder { display: none; }
+
+  .campos { display: flex; flex-direction: column; gap: 22px; }
+  .campo label { display: block; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+  .campo input, .campo select, .campo textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 15px;
+    padding: 12px 14px;
+    border: 2px solid var(--gris-linea);
+    border-radius: 4px;
+    background: white;
+  }
+  .campo input[readonly] { background: var(--gris-suave); color: #444; }
+  .campo textarea { min-height: 150px; resize: vertical; }
+  .fila-doble { display: flex; gap: 18px; }
+  .fila-doble .campo { flex: 1; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-u"></div>
+  <a class="titulo" href="/private">ReÚtil</a>
+  <a class="bienvenida" href="/perfil">
+    Bienvenid@,<br>{{userNombre}}
+    <div class="avatar">{{userInicial}}</div>
+    ⌄
+  </a>
+</header>
+
+<section class="hero-publicar">
+  <div class="panel-texto"><p style="font-family: 'Playfair Display';">Crear nueva publicación</p></div>
+  <div class="panel-plus">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+  </div>
+</section>
+
+<form method="post" action="/publicar" enctype="multipart/form-data">
+  <main class="form-wrap">
+    <label class="foto-drop" id="fotoDrop">
+      <div class="placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M7 16a4 4 0 01-1-7.9A5 5 0 0115.9 6.1 4.5 4.5 0 0117 15M12 12v7M9 16l3-3 3 3"/></svg>
+        <div class="texto-principal">Subir imagen</div>
+        <div class="texto-secundario">(max. 10mb)</div>
+      </div>
+      <input type="file" name="foto" id="foto" accept="image/*" required>
+    </label>
+
+    <div class="campos">
+      <div class="campo">
+        <label>Categoría*</label>
+        <select id="categoria" name="categoria" required>
+          <option value="Ropa/Uniformes">Ropa / Uniformes</option>
+          <option value="Materiales">Materiales</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Título (automático)</label>
+        <input type="text" id="tituloPreview" readonly value="">
+      </div>
+
+      <div class="campo">
+        <label>Descripción*</label>
+        <textarea name="descripcion" required placeholder="Estado, detalles, por qué lo donás..."></textarea>
+      </div>
+
+      <div id="camposRopa" class="fila-doble">
+        <div class="campo">
+          <label>Tipo de prenda*</label>
+          <select name="tipo_ropa" id="tipoRopa">
+            <option value="" disabled selected>Elegí una opción</option>
+            <option>Camisa</option><option>Pantalón</option><option>Pollera</option>
+            <option>Túnica</option><option>Corbata</option><option>Moña</option>
+            <option>Chomba</option><option>Buzo</option><option>Campera</option>
+            <option>Zapatos</option><option>Mochila</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Talle*</label>
+          <select name="talle" id="talle">
+            <option value="" disabled selected>Elegí una opción</option>
+            <option>Único</option><option>XS</option><option>S</option><option>M</option>
+            <option>L</option><option>XL</option>
+            <option>4</option><option>6</option><option>8</option><option>10</option>
+            <option>12</option><option>14</option><option>16</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="camposMateriales" class="fila-doble" style="display:none;">
+        <div class="campo">
+          <label>Tipo de material*</label>
+          <select name="tipo_material" id="tipoMaterial">
+            <option value="" disabled selected>Elegí una opción</option>
+            <option>Libro</option><option>Cuaderno</option><option>Útiles</option>
+            <option>Calculadora</option><option>Mochila</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Materia*</label>
+          <input type="text" name="materia" id="materia" placeholder="Ej: Matemática, Inglés...">
+        </div>
+      </div>
+
+      <div class="fila-doble">
+        <div class="campo" id="campoColegio">
+          <label>Colegio*</label>
+          <input type="text" name="colegio" id="colegio" placeholder="Ej: Colegio San Francisco">
+        </div>
+        <div class="campo">
+          <label>Estado*</label>
+          <select name="estado" id="condicion" required>
+            <option value="" disabled selected>Elegí una opción</option>
+            <option>Nuevo</option><option>Como nuevo</option>
+            <option>Buen estado</option><option>Aceptable</option>
+            <option>Para reparar</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-plano" type="submit">Publicar+</button>
+    </div>
+  </main>
+</form>
+
+<script>
+  const categoria = document.getElementById("categoria");
+  const camposRopa = document.getElementById("camposRopa");
+  const camposMateriales = document.getElementById("camposMateriales");
+  const campoColegio = document.getElementById("campoColegio");
+  const tipoRopa = document.getElementById("tipoRopa");
+  const talle = document.getElementById("talle");
+  const colegio = document.getElementById("colegio");
+  const tipoMaterial = document.getElementById("tipoMaterial");
+  const materia = document.getElementById("materia");
+  const condicion = document.getElementById("condicion");
+  const tituloPreview = document.getElementById("tituloPreview");
+
+  function esRopa() { return categoria.value === "Ropa/Uniformes"; }
+
+  function actualizarVisibilidad() {
+    camposRopa.style.display = esRopa() ? "flex" : "none";
+    camposMateriales.style.display = esRopa() ? "none" : "flex";
+    campoColegio.style.display = esRopa() ? "block" : "none";
+
+    tipoRopa.required = esRopa();
+    talle.required = esRopa();
+    colegio.required = esRopa();
+    tipoMaterial.required = !esRopa();
+    materia.required = !esRopa();
+  }
+
+  // Misma lógica que genera el título en server.js (generarTitulo) - mantenerlas en sync
+  function actualizarTitulo() {
+    let t = "";
+    if (esRopa()) {
+      if (tipoRopa.value && talle.value && colegio.value.trim() && condicion.value) {
+        t = `${tipoRopa.value} talle ${talle.value} de ${colegio.value.trim()} - ${condicion.value}`;
+      }
+    } else {
+      if (tipoMaterial.value && materia.value.trim() && condicion.value) {
+        t = `${tipoMaterial.value} de ${materia.value.trim()} - ${condicion.value}`;
+      }
+    }
+    tituloPreview.value = t;
+  }
+
+  categoria.addEventListener("change", () => { actualizarVisibilidad(); actualizarTitulo(); });
+  [tipoRopa, talle, colegio, tipoMaterial, materia, condicion].forEach(el =>
+    el.addEventListener("input", actualizarTitulo)
+  );
+  actualizarVisibilidad();
+
+  const fotoInput = document.getElementById("foto");
+  const fotoDrop = document.getElementById("fotoDrop");
+  fotoInput.addEventListener("change", () => {
+    const file = fotoInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      fotoDrop.style.backgroundImage = `url('${e.target.result}')`;
+      fotoDrop.classList.add("con-foto");
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+
+</body>
+</html>

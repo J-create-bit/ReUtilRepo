@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReÚtil</title>
 
@@ -104,6 +106,37 @@
             padding: 6px 12px;
             cursor: pointer;
         }
+
+
+        .consentimiento {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .consentimiento input[type="checkbox"] {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            margin: 3px 0 0;
+            cursor: pointer;
+        }
+
+        .consentimiento label {
+            display: inline;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .consentimiento a {
+            color: #16877e;
+            text-decoration: underline;
+        }
+
+        .consentimiento a:hover {
+            color: #21bf73;
+        }
     </style>
 </head>
 
@@ -139,10 +172,40 @@
             <input type="password" id="password" name="password" required placeholder="******">
 
             <label for="telefono">WhatsApp/Teléfono *</label>
-            <input type="tel" id="telefono" name="telefono" required placeholder="+598 99 123 456">
+            <input type="tel" id="telefono" name="telefono" required placeholder="099 123 456">
 
             <label for="zona">Zona/Barrio *</label>
             <input type="text" id="direccion" name="direccion" required placeholder="Ej: Nueva Savona">
+            <div class="consentimiento">
+                <input
+                    type="checkbox"
+                    id="mayorEdad"
+                    name="mayorEdad"
+                    value="si"
+                    required
+                >
+                <label for="mayorEdad">
+                    Declaro que tengo más de 18 años.
+                </label>
+            </div>
+
+            <div class="consentimiento">
+                <input
+                    type="checkbox"
+                    id="aceptaTerminos"
+                    name="aceptaTerminos"
+                    value="si"
+                    required
+                >
+                <label for="aceptaTerminos">
+                    Leí y acepto los
+                    <a href="https://docs.google.com/document/d/1OyqhqbPmUqj7sDlGfs5S-mkga4w1LBcZ8K0R3u7-9P0/edit?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                        términos, condiciones y compromisos de uso
+                    </a>.
+                </label>
+            </div>
 
             <button type="submit">
                 Registrarse

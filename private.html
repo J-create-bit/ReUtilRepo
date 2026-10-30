@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReÚtil</title>
+<link rel="icon" type="image/x-icon" href="favicon.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  html {
+  scroll-behavior: smooth;
+  }
+
+  .acciones {
+    margin: 40px 32px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 34px;
+  }
+  .accion {
+    padding: 22px;
+    text-decoration: none;
+    color: var(--texto);
+    display: block;
+  }
+  .accion .icono { height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .accion .icono svg { width: 58px; height: 58px; }
+  .accion-linea { display: flex; align-items: center; justify-content: space-between; }
+  .accion-linea span { font-size: 22px; font-weight: 800; }
+
+  .buscar-seccion { margin: 40px 32px 0; }
+  main.listado { margin: 28px 32px 60px; }
+
+  @media (max-width: 900px) {
+    .acciones, .buscar-seccion, main.listado { margin-left: 16px; margin-right: 16px; }
+    .acciones { grid-template-columns: 1fr; }
+    main.listado { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-u"></div>
+  <a class="titulo" href="/private">ReÚtil</a>
+  <a class="bienvenida" href="/perfil">
+    Bienvenid@,<br>{{userNombre}}
+    <div class="avatar">{{userInicial}}</div>
+    ⌄
+  </a>
+</header>
+
+<section class="acciones">
+  <a class="accion card-escalonada" href="/publicar">
+    <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg></div>
+    <div class="accion-linea">
+      <span>Publicar</span>
+      <div class="btn-flecha"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+  </a>
+  <a class="accion card-escalonada" href="#buscar-seccion" id="linkBuscar">
+    <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="10" cy="10" r="6"/><path d="M20 20l-4.5-4.5"/></svg></div>
+    <div class="accion-linea">
+      <span>Buscar</span>
+      <div class="btn-flecha"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+  </a>
+  <a class="accion card-escalonada" href="/perfil">
+    <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg></div>
+    <div class="accion-linea">
+      <span>Perfil</span>
+      <div class="btn-flecha"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+  </a>
+</section>
+
+
+<section class="buscar-seccion" id="buscar-seccion">
+  <form class="filtros-box" action="/private" method="get" id="formBuscar">
+    <div class="buscar">
+      <svg width="18" height="18" viewBox="0 0 24 24"
+        fill="none" stroke="#333" stroke-width="2">
+        <circle cx="10" cy="10" r="6"/>
+        <path d="M20 20l-4.5-4.5"/>
+      </svg>
+
+      <input
+        type="search"
+        id="inputBuscar"
+        name="q"
+        placeholder="Buscar por texto..."
+        value="{{qValue}}"
+      >
+    </div>
+
+    <label for="categoriaBuscar">Filtrar por:</label>
+    <select name="categoria" id="categoriaBuscar">
+      <option value="" {{categoriaTodasSelected}}>Todas</option>
+      <option value="Ropa/Uniformes" {{categoriaRopaSelected}}>Ropa/Uniformes</option>
+      <option value="Materiales" {{categoriaMaterialesSelected}}>Materiales</option>
+    </select>
+  </form>
+</section>
+
+{{listado}}
+
+<!-- Modal de producto -->
+<div class="modal-fondo" id="modalFondo">
+  <div class="modal-caja">
+    <button class="modal-cerrar" id="modalCerrar">✕</button>
+    <div class="modal-foto" id="modalFoto"></div>
+    <div class="modal-body">
+      <h2 id="modalTitulo"></h2>
+      <div class="modal-badges" id="modalBadges"></div>
+      <p class="modal-descripcion" id="modalDescripcion"></p>
+      <div class="modal-dueno">
+        <div class="avatar" id="modalDuenoInicial" style="width:30px;height:30px;font-size:12px;"></div>
+        <span>Publicado por <strong id="modalDuenoNombre"></strong></span>
+      </div>
+      <div class="modal-acciones">
+        <a class="btn-secundario" id="modalVerPerfil" href="#">Ver perfil</a>
+        <a class="btn-primario" id="modalContactar" href="#" target="_blank" rel="noopener">Contactar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="datos-publicaciones" type="application/json">{{datosPublicaciones}}</script>
+<script>
+  const datos = JSON.parse(document.getElementById("datos-publicaciones").textContent || "[]");
+  const modalFondo = document.getElementById("modalFondo");
+
+  function soloDigitos(str) { return (str || "").replace(/\D/g, ""); }
+
+  document.querySelectorAll(".item").forEach(el => {
+    el.addEventListener("click", () => {
+      const id = el.dataset.id;
+      const p = datos.find(x => String(x.id) === String(id));
+      if (!p) return;
+
+      document.getElementById("modalFoto").style.backgroundImage = `url('${p.foto_url}')`;
+      document.getElementById("modalTitulo").textContent = p.titulo;
+      document.getElementById("modalDescripcion").textContent = p.descripcion || "Sin descripción.";
+
+      const badges = [p.categoria, p.estado, p.talle ? `Talle ${p.talle}` : null, p.colegio, p.materia]
+        .filter(Boolean)
+        .map(b => `<span class="badge">${b}</span>`)
+        .join("");
+      document.getElementById("modalBadges").innerHTML = badges;
+
+      const nombre = p.dueno ? p.dueno.nombre : "Usuario";
+      document.getElementById("modalDuenoNombre").textContent = nombre;
+      document.getElementById("modalDuenoInicial").textContent = nombre.charAt(0).toUpperCase();
+
+      const verPerfil = document.getElementById("modalVerPerfil");
+      const contactar = document.getElementById("modalContactar");
+      if (p.dueno) {
+        verPerfil.href = `/perfil/${p.dueno.id}`;
+        const numero = soloDigitos(p.dueno.telefono);
+        if (numero) {
+          contactar.href = `https://wa.me/${numero}?text=${encodeURIComponent("Hola! Te escribo por tu publicación en ReÚtil: " + p.titulo)}`;
+          contactar.style.pointerEvents = "";
+          contactar.textContent = "Contactar por WhatsApp";
+        } else {
+          contactar.href = "#";
+          contactar.textContent = "Sin teléfono cargado";
+        }
+      } else {
+        verPerfil.href = "#";
+        contactar.href = "#";
+      }
+
+      modalFondo.classList.add("abierto");
+    });
+  });
+
+  document.getElementById("linkBuscar").addEventListener("click", () => {
+    setTimeout(() => document.querySelector('input[name="q"]').focus(), 300);
+  });
+
+  document.getElementById("modalCerrar").addEventListener("click", () => modalFondo.classList.remove("abierto"));
+  modalFondo.addEventListener("click", (e) => { if (e.target === modalFondo) modalFondo.classList.remove("abierto"); });
+
+
+const formBuscar = document.getElementById("formBuscar");
+const inputBuscar = document.getElementById("inputBuscar");
+const categoriaBuscar = document.getElementById("categoriaBuscar");
+
+let temporizadorBusqueda;
+
+if (formBuscar && inputBuscar && categoriaBuscar) {
+  categoriaBuscar.addEventListener("change", () => {
+    formBuscar.requestSubmit();
+  });
+
+  inputBuscar.addEventListener("input", () => {
+    clearTimeout(temporizadorBusqueda);
+
+    temporizadorBusqueda = setTimeout(() => {
+      formBuscar.requestSubmit();
+    }, 500);
+  });
+}
+
+if (formBuscar && inputBuscar && categoriaBuscar) {
+  categoriaBuscar.addEventListener("change", () => {
+    formBuscar.requestSubmit();
+  });
+
+  inputBuscar.addEventListener("input", () => {
+    clearTimeout(temporizadorBusqueda);
+
+    temporizadorBusqueda = setTimeout(() => {
+      formBuscar.requestSubmit();
+    }, 500);
+  });
+}
+</script>
+
+</body>
+</html>

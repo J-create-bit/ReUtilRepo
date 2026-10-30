@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+<title>{{perfilNombre}} - ReÚtil</title>
+<link rel="icon" type="image/x-icon" href="favicon.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .hero-perfil {
+    margin: 24px 32px 0;
+    border: 2px solid var(--gris-linea);
+    border-radius: 4px;
+    display: flex;
+    min-height: 260px;
+    overflow: hidden;
+  }
+  .hero-perfil .foto {
+    width: 26%;
+    background: var(--verde-oscuro);
+    border-right: 2px solid var(--gris-linea);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-perfil .foto span {
+    font-size: 110px;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+  }
+  .hero-perfil .info {
+    flex: 1;
+    background: var(--teal-claro);
+    padding: 40px 44px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-perfil h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 52px;
+    margin-bottom: 14px;
+  }
+  .hero-perfil .stats { font-size: 19px; font-weight: 800; line-height: 1.5; margin-bottom: 10px; }
+  .hero-perfil .fecha { font-size: 14px; color: #333; }
+
+  main.perfil-main {
+    max-width: 1200px;
+    margin: 40px auto 70px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 36px;
+    align-items: start;
+  }
+  .catalogo h2 { font-size: 32px; font-weight: 800; margin-bottom: 18px; }
+  .catalogo main.listado { grid-template-columns: repeat(2, 1fr); margin-bottom: 0; }
+
+  .sidebar-perfil { padding: 26px; }
+  .sidebar-perfil h3 { font-size: 22px; font-weight: 800; margin-bottom: 18px; }
+  .sidebar-perfil .fila {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; margin-bottom: 14px;
+  }
+  .sidebar-perfil svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+  .marcar-entregado {
+    margin-top: 8px;
+  }
+  .marcar-entregado button {
+    width: 100%; font-size: 12px; padding: 8px 10px; border-radius: 4px; border: 2px solid var(--gris-linea);
+    background: var(--verde); color: white; cursor: pointer; font-weight: 700; white-space: nowrap;
+  }
+  .item.entregado { opacity: 0.55; }
+  .item .info-extra { padding: 0 16px 14px; }
+
+  @media (max-width: 900px) {
+    .hero-perfil { flex-direction: column; }
+    .hero-perfil .foto { width: 100%; height: 160px; }
+    main.perfil-main { grid-template-columns: 1fr; margin-left: 16px; margin-right: 16px; }
+    .catalogo main.listado { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-u"></div>
+  <a class="titulo" href="/private">ReÚtil</a>
+  <a class="bienvenida" href="/perfil">
+    Bienvenid@,<br>{{userNombre}}
+    <div class="avatar">{{userInicial}}</div>
+    ⌄
+  </a>
+</header>
+
+<section class="hero-perfil">
+  <div class="foto">
+    <span>{{perfilInicial}}</span>
+  </div>
+  <div class="info">
+    <h1 style="font-family: 'Playfair Display';">{{perfilNombre}}</h1>
+    <div class="stats">
+      {{perfilDados}} objetos dados<br>
+      {{perfilRecibidos}} objetos recibidos
+    </div>
+    <div class="fecha">Cuenta creada el {{perfilFechaCreacion}}</div>
+  </div>
+</section>
+
+<main class="perfil-main">
+  <div class="catalogo">
+    <h2>Catálogo de {{perfilPrimerNombre}}</h2>
+    <form class="filtros-box" action="/perfil{{perfilQuerySuffix}}" method="get" style="margin-bottom:24px;">
+      <div class="buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><circle cx="10" cy="10" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
+        <input type="search" name="q" placeholder="Buscar en este catálogo..." value="{{qValue}}">
+      </div>
+      <div class="btn-flecha" style="cursor:pointer;" onclick="this.closest('form').submit()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </form>
+
+    {{catalogoListado}}
+  </div>
+
+  <aside class="sidebar-perfil card-escalonada">
+    <h3>Perfil</h3>
+    <div class="fila">{{perfilNombre}}</div>
+    <div class="fila">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+      {{perfilRecibidos}} objetos recibidos
+    </div>
+    <div class="fila">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M12 21V9M7 14l5-5 5 5"/><path d="M4 3h16"/></svg>
+      {{perfilDados}} objetos dados
+    </div>
+    <div class="fila">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z"/></svg>
+      {{perfilUbicacion}}
+    </div>
+    <div class="fila">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      {{perfilUltimaActividad}}
+    </div>
+  </aside>
+</main>
+
+<script id="datos-publicaciones-perfil" type="application/json">{{datosPublicaciones}}</script>
+
+<!-- Modal de producto (igual que en el feed) -->
+<div class="modal-fondo" id="modalFondo">
+  <div class="modal-caja">
+    <button class="modal-cerrar" id="modalCerrar">✕</button>
+    <div class="modal-foto" id="modalFoto"></div>
+    <div class="modal-body">
+      <h2 id="modalTitulo"></h2>
+      <div class="modal-badges" id="modalBadges"></div>
+      <p class="modal-descripcion" id="modalDescripcion"></p>
+      <div class="modal-dueno">
+        <div class="avatar" id="modalDuenoInicial" style="width:30px;height:30px;font-size:12px;"></div>
+        <span>Publicado por <strong id="modalDuenoNombre"></strong></span>
+      </div>
+      <div class="modal-acciones">
+        <a class="btn-secundario" id="modalVerPerfil" href="#">Ver perfil</a>
+        <a class="btn-primario" id="modalContactar" href="#" target="_blank" rel="noopener">Contactar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal del código QR para entregar -->
+<div class="modal-fondo" id="modalQR">
+  <div class="modal-caja" style="max-width:380px;">
+    <button class="modal-cerrar" id="modalQRCerrar">✕</button>
+    <div class="modal-body" style="padding-top:50px;">
+      <h2 style="text-align:center;margin-bottom:6px;" id="qrTitulo">Entregar</h2>
+      <p class="qr-texto">Mostrale este código a quien lo recibe. Al escanearlo con el celular, se suma automáticamente a sus objetos recibidos.</p>
+      <img class="qr-imagen" id="qrImagen" width="260" height="260" alt="Código QR para confirmar la entrega">
+      <div class="qr-link-box">
+        <input type="text" id="qrLink" readonly>
+        <button type="button" id="qrCopiar">Copiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const datos = JSON.parse(document.getElementById("datos-publicaciones-perfil").textContent || "[]");
+  const modalFondo = document.getElementById("modalFondo");
+  const modalQR = document.getElementById("modalQR");
+
+  function soloDigitos(str) { return (str || "").replace(/\D/g, ""); }
+
+  document.querySelectorAll(".item").forEach(el => {
+    el.addEventListener("click", () => {
+      const id = el.dataset.id;
+      const p = datos.find(x => String(x.id) === String(id));
+      if (!p) return;
+
+      document.getElementById("modalFoto").style.backgroundImage = `url('${p.foto_url}')`;
+      document.getElementById("modalTitulo").textContent = p.titulo;
+      document.getElementById("modalDescripcion").textContent = p.descripcion || "Sin descripción.";
+
+      const badges = [p.categoria, p.estado, p.talle ? `Talle ${p.talle}` : null, p.colegio, p.materia]
+        .filter(Boolean)
+        .map(b => `<span class="badge">${b}</span>`)
+        .join("");
+      document.getElementById("modalBadges").innerHTML = badges;
+
+      const nombre = p.dueno ? p.dueno.nombre : "Usuario";
+      document.getElementById("modalDuenoNombre").textContent = nombre;
+      document.getElementById("modalDuenoInicial").textContent = nombre.charAt(0).toUpperCase();
+
+      const verPerfil = document.getElementById("modalVerPerfil");
+      const contactar = document.getElementById("modalContactar");
+      if (p.dueno) {
+        verPerfil.href = `/perfil/${p.dueno.id}`;
+        const numero = soloDigitos(p.dueno.telefono);
+        if (numero) {
+          contactar.href = `https://wa.me/${numero}?text=${encodeURIComponent("Hola! Te escribo por tu publicación en ReÚtil: " + p.titulo)}`;
+          contactar.textContent = "Contactar por WhatsApp";
+        } else {
+          contactar.href = "#";
+          contactar.textContent = "Sin teléfono cargado";
+        }
+      } else {
+        verPerfil.href = "#";
+        contactar.href = "#";
+      }
+      modalFondo.classList.add("abierto");
+    });
+  });
+
+  document.getElementById("modalCerrar").addEventListener("click", () => modalFondo.classList.remove("abierto"));
+  modalFondo.addEventListener("click", (e) => { if (e.target === modalFondo) modalFondo.classList.remove("abierto"); });
+  document.getElementById("modalQRCerrar").addEventListener("click", () => modalQR.classList.remove("abierto"));
+  modalQR.addEventListener("click", (e) => { if (e.target === modalQR) modalQR.classList.remove("abierto"); });
+
+  document.querySelectorAll(".acciones-propias").forEach(box => box.addEventListener("click", (e) => e.stopPropagation()));
+
+  document.querySelectorAll(".btn-pausar").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      btn.disabled = true;
+      try {
+        const resp = await fetch(`/publicaciones/${id}/pausar`, { method: "POST" });
+        if (resp.ok) {
+          location.reload();
+        } else {
+          const data = await resp.json().catch(() => ({}));
+          alert(data.error || "No se pudo actualizar.");
+          btn.disabled = false;
+        }
+      } catch {
+        alert("Error de conexión.");
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.querySelectorAll(".btn-entregar").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      btn.disabled = true;
+      try {
+        const resp = await fetch(`/publicaciones/${id}/iniciar-entrega`, { method: "POST" });
+        if (!resp.ok) {
+          const data = await resp.json().catch(() => ({}));
+          alert(data.error || "No se pudo generar el código.");
+          return;
+        }
+        const { url, qr } = await resp.json();
+        document.getElementById("qrTitulo").textContent = `Entregar: ${btn.dataset.titulo}`;
+        document.getElementById("qrImagen").src = qr;
+        document.getElementById("qrLink").value = url;
+        modalQR.classList.add("abierto");
+      } catch {
+        alert("Error de conexión.");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  document.getElementById("qrCopiar").addEventListener("click", () => {
+    const input = document.getElementById("qrLink");
+    input.select();
+    navigator.clipboard?.writeText(input.value).catch(() => {});
+  });
+</script>
+
+</body>
+</html>

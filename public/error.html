@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | ReÚtil</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .error-main {
+            width: min(90%, 600px);
+            margin: 80px auto;
+            padding: 0 10px 20px;
+        }
+
+        .error-card {
+            padding: 38px 32px;
+            text-align: center;
+        }
+
+        .error-icono {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gris-linea);
+            border-radius: 50%;
+            background: var(--teal-claro);
+            color: var(--verde-oscuro);
+            font-size: 38px;
+            font-weight: 800;
+        }
+
+        .error-card h1 {
+            color: var(--verde-oscuro);
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+
+        .error-card p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--texto);
+            margin: 0 0 26px;
+        }
+
+        .error-codigo {
+            display: none;
+            text-align: left;
+            margin-bottom: 26px;
+            padding: 14px 18px;
+            border: 2px solid var(--gris-linea);
+            border-radius: 4px;
+            background: var(--gris-suave);
+            font-family: ui-monospace, Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #444;
+            overflow-wrap: anywhere;
+        }
+
+        .error-boton {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            font-family: inherit;
+        }
+        @media (max-width: 600px) {
+            .error-main {
+                margin: 45px auto;
+            }
+
+            .error-card {
+                padding: 28px 20px;
+            }
+
+            .error-card h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="error-main">
+        <section class="error-card card-escalonada">
+
+            <div class="error-icono">!</div>
+
+            <h1>Ocurrió un error</h1>
+
+            <p id="msg">Algo salió mal.</p>
+
+            <div class="error-codigo" id="codigo"></div>
+
+            <a href="/" class="btn-plano error-boton">
+                Volver al inicio
+            </a>
+
+        </section>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        document.getElementById("msg").textContent =
+            params.get("msg") || "Algo salió mal.";
+
+        const code = params.get("code");
+
+        if (code) {
+            const box = document.getElementById("codigo");
+
+            box.textContent = "Código de error: " + code;
+            box.style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
